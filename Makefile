@@ -1,4 +1,4 @@
-CC = g++
+CC = gcc
 CFLAGS = -Iinclude/
 LDFLAGS = -Llib/ -l:libraylib.a -lm
 SRC = main.c
