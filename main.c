@@ -7,6 +7,7 @@
 #define BOARD_SIZE 8
 #define TILE_SIZE 42
 #define TILE_TYPES 5
+#define SCORE_FONT_SIZE 20
 
 const char tile_chars[TILE_TYPES] = { '#', '@', '$', '%', '&' };
 char board[BOARD_SIZE][BOARD_SIZE];
@@ -14,6 +15,7 @@ char board[BOARD_SIZE][BOARD_SIZE];
 int score = 0;
 Vector2 grid_origin;
 Texture2D background;
+Font score_font;
 
 char random_tile() {
     return tile_chars[rand() % TILE_TYPES];
@@ -44,6 +46,7 @@ int main() {
     srand(time(NULL));
 
     background = LoadTexture("assets/background.png");
+    score_font = LoadFontEx("assets/PressStart2P-Regular.ttf", SCORE_FONT_SIZE, NULL, 0);
 
     init_board();
 
@@ -86,15 +89,27 @@ int main() {
             }
         }
 
-        DrawText(
+        DrawTextEx(
+            score_font,
             TextFormat("SCORE : %d", score),
-            20, 20, 24, YELLOW
+            (Vector2) {
+                20, 20
+            },
+            SCORE_FONT_SIZE,
+            1.0f,
+            YELLOW
         );
+
+        // DrawText(
+        //     TextFormat("SCORE : %d", score),
+        //     20, 20, 24, YELLOW
+        // );
 
         EndDrawing();
     }
 
     UnloadTexture(background);
+    UnloadFont(score_font);
 
     CloseWindow();
 
