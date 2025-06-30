@@ -11,6 +11,7 @@
 const char tile_chars[TILE_TYPES] = { '#', '@', '$', '%', '&' };
 char board[BOARD_SIZE][BOARD_SIZE];
 
+int score = 0;
 Vector2 grid_origin;
 Texture2D background;
 
@@ -84,6 +85,11 @@ int main() {
                 );
             }
         }
+
+        DrawText(
+            TextFormat("SCORE : %d", score),
+            20, 20, 24, YELLOW
+        );
 
         EndDrawing();
     }
