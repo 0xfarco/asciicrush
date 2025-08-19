@@ -25,6 +25,16 @@ char random_tile() {
     return tile_chars[rand() % TILE_TYPES];
 }
 
+void swap_tiles(int x1, int y1, int x2, int y2) {
+    char temp = board[y1][x1];
+    board[y1][x1] = board[y2][x2];
+    board[y2][x2] = temp;
+}
+
+bool are_tiles_adjacent(Vector2 a, Vector2 b) {
+    return (abs((int)a.x - (int)b.x) + abs((int)a.y - (int)b.y)) == 1;
+}
+
 bool find_matches() {
     bool found = false;
     for (int y = 0; y < BOARD_SIZE; y++) {
@@ -68,7 +78,6 @@ void resolve_matches() {
                     fall_offset[write_y][x] = (write_y - y) * TILE_SIZE;
                     board[y][x] = ' ';
                 }
-                // board[write_y][x] = board[y][x];
                 write_y--;
             }
         }
@@ -118,12 +127,21 @@ int main() {
             int x = (mouse.x - grid_origin.x) / TILE_SIZE;
             int y = (mouse.y - grid_origin.y) / TILE_SIZE;
             if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
-                selected_tile = (Vector2) { x, y };
+                Vector2 current_tile = (Vector2) { x, y };
+                if (selected_tile.x < 0) {
+                    selected_tile = current_tile;
+                } else {
+                    if (are_tiles_adjacent(selected_tile, current_tile)) {
+                        swap_tiles(selected_tile.x, selected_tile.y, current_tile.x, current_tile.y);
+                        if (find_matches()) {
+                            resolve_matches();
+                        } else {
+                            swap_tiles(selected_tile.x, selected_tile.y, current_tile.x, current_tile.y);
+                        }
+                    }
+                    selected_tile = (Vector2){ -1, -1 };
+                }
             }
-        }
-
-        if (find_matches()) {
-            resolve_matches();
         }
 
         for (int y = 0; y < BOARD_SIZE; y++) {
