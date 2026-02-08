@@ -204,6 +204,8 @@ int main() {
             WHITE
         );
 
+        DrawRectangle(grid_origin.x, grid_origin.y, BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE, Fade(DARKGRAY, 0.60f));
+
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Rectangle rect = {
