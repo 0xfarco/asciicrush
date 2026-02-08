@@ -24,6 +24,10 @@ float fall_speed = 8.0f;
 float match_delay_timer = 0.0f;
 const float MATCH_DELAY_DURATION = 0.2f;
 
+float score_scale = 1.0f;
+float score_scale_velocity = 0.0f;
+bool score_animating = false;
+
 Music background_music;
 Sound match_sound;
 
@@ -88,6 +92,10 @@ bool find_matches() {
                 found = true;
                 PlaySound(match_sound);
 
+                score_animating = true;
+                score_scale = 2.0f;
+                score_scale_velocity = -2.5f;
+
                 add_score_popup(x, y, 10, grid_origin);
             }
         }
@@ -101,6 +109,10 @@ bool find_matches() {
                 score += 10;
                 found = true;
                 PlaySound(match_sound);
+
+                score_animating = true;
+                score_scale = 2.0f;
+                score_scale_velocity = -2.5f;
 
                 add_score_popup(x, y, 10, grid_origin);
             }
@@ -243,6 +255,14 @@ int main() {
             }
         }
 
+        if (score_animating) {
+            score_scale += score_scale_velocity * GetFrameTime();
+            if (score_scale <= 1.0f) {
+                score_scale = 1.0f;
+                score_animating = false;
+            }
+        }
+
         BeginDrawing();
         ClearBackground(BLACK);
 
@@ -301,7 +321,7 @@ int main() {
             (Vector2) {
                 20, 20
             },
-            SCORE_FONT_SIZE,
+            SCORE_FONT_SIZE * score_scale,
             1.0f,
             YELLOW
         );
